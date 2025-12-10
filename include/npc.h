@@ -41,12 +41,14 @@ struct NPC : public std::enable_shared_from_this<NPC>
     void subscribe(std::shared_ptr<IFightVisitor>visitor );
     void fight_notify(const std::shared_ptr<NPC> defender,bool win);
     virtual bool is_close(const std::shared_ptr<NPC> &other, size_t distance) const;
-    //принять визитера
+    //первая диспетчеризация выбор конкретного типа
     virtual bool accept(std::shared_ptr<NPC> visitor) = 0;
+    
     virtual bool fight(std::shared_ptr<Bear> other) = 0;
     virtual bool fight(std::shared_ptr<Knight> other) = 0;
     virtual bool fight(std::shared_ptr<Orc> other) = 0;
-    //совершить визит
+    
+    //2 диспетчеризация -- поведение в зависимости от attacker
     bool visit(std::shared_ptr<Orc> other);
     bool visit(std::shared_ptr<Knight> other);
     bool visit(std::shared_ptr<Bear> other);

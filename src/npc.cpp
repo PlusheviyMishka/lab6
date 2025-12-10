@@ -11,10 +11,11 @@ void NPC::subscribe(std::shared_ptr<IFightVisitor> visitor)
 {
    visitors.push_back(visitor);
 }
-//уведомление о победе или не победе  над defender
+//уведомление о победе или не победе  над defender, наследуется
 void NPC::fight_notify(const std::shared_ptr<NPC> defender, bool win)
 {   //уведомление всем observers
     for (auto &o : visitors)
+        //юзаем итог битвы и ее условия
         o->on_fight(shared_from_this(), defender, win);
 }
 //проверка дистанции

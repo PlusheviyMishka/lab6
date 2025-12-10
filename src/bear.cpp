@@ -13,7 +13,7 @@ void Bear::print()
 void Bear::print(std::ostream &outfs) {
     outfs << *this;
 }
-
+//visitor-observer
 bool Bear::accept(std::shared_ptr<NPC> visitor) {
     std::shared_ptr<Bear> This = std::make_shared<Bear>(*this);
     return visitor->visit(This);

@@ -1,19 +1,19 @@
 
 Murder -------- 
+Orc: { x:18, y:16} 
+Bear: { x:2, y:4} 
+
+Murder -------- 
 Orc: { x:95, y:91} 
 Bear: { x:82, y:92} 
 
 Murder -------- 
 Orc: { x:18, y:16} 
-Bear: { x:2, y:4} 
+Bear: { x:36, y:27} 
 
 Murder -------- 
 Knight: { x:27, y:81} 
 Orc: { x:5, y:64} 
-
-Murder -------- 
-Orc: { x:18, y:16} 
-Bear: { x:36, y:27} 
 
 Murder -------- 
 Knight: { x:58, y:78} 

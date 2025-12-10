@@ -19,14 +19,15 @@ void Knight::save(std::ostream &os)
     os << KnightType << std::endl;
     NPC::save(os);
 }
-
+//visitor-observer
 bool Knight::accept(std::shared_ptr<NPC> visitor) {
+    //коллективное владение объектом наблюдательями
     std::shared_ptr<Knight> This = std::make_shared<Knight>(*this);
     return visitor->visit(This);
 }
-
+//проимходит бой -- мы уведомляем наблюдателей
 bool Knight::fight(std::shared_ptr<Bear> other)
-{
+{   //здесь происходит уведомление наблюдателя
     fight_notify(other, false);
     return false;
 }

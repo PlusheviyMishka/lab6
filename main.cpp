@@ -5,22 +5,27 @@
 
 
 class TextVisitor : public IFightVisitor {
-private:
-    TextVisitor(){};
-
 public:
+    TextVisitor() = default;
+    
+    //Запрет на  копирование
+    TextVisitor(const TextVisitor&) = delete;
+    TextVisitor& operator=(const TextVisitor&) = delete;
+
     static std::shared_ptr<IFightVisitor> get()
     {
-        static TextVisitor instance;
-        return std::shared_ptr<IFightVisitor>(&instance, [](IFightVisitor *) {});
+        static std::shared_ptr<TextVisitor> instance = 
+            std::make_shared<TextVisitor>();
+        return instance;
     }
 
-    void on_fight(const std::shared_ptr<NPC> attacker, const std::shared_ptr<NPC> defender, bool win) override
+    void on_fight(const std::shared_ptr<NPC> attacker, 
+                  const std::shared_ptr<NPC> defender, 
+                  bool win) override
     {
         if (win)
         {
-            std::cout << std::endl
-                      << "Murder --------" << std::endl;
+            std::cout << std::endl << "Murder --------" << std::endl;
             attacker->print();
             defender->print();
         }
@@ -30,35 +35,49 @@ public:
 class F_Visitor : public IFightVisitor {
 private:
     std::ofstream file;
-
+    
+public:
     F_Visitor()
     {
         file.open("log.txt");
     }
+    
+    // запрет на копирование
+    F_Visitor(const F_Visitor&) = delete;
+    F_Visitor& operator=(const F_Visitor&) = delete;
+    
+    ~F_Visitor()
+    {
+        if (file.is_open())
+            file.close();
+    }
 
-public:
     static std::shared_ptr<IFightVisitor> get()
     {
-        static std::shared_ptr<IFightVisitor> instance(new F_Visitor());
+        static std::shared_ptr<F_Visitor> instance = 
+            std::make_shared<F_Visitor>();
         return instance;
     }
 
-    void on_fight(const std::shared_ptr<NPC> attacker, const std::shared_ptr<NPC> defender, bool win) override
+    void on_fight(const std::shared_ptr<NPC> attacker, 
+                  const std::shared_ptr<NPC> defender, 
+                  bool win) override
     {
         if (win)
         {
-            file << std::endl
-                 << "Murder -------- " << std::endl;
+            file << std::endl << "Murder -------- " << std::endl;
             attacker->print(file);
             defender->print(file);
         }
     }
 };
 
+//фабричный метод - из потока 
 std::shared_ptr<NPC> factory(std::istream &is)
 {
     std::shared_ptr<NPC> result;
     int type{0};
+    // условия  на выбор типа продукции
     if (is >> type)
     {
         switch (type)
@@ -76,7 +95,7 @@ std::shared_ptr<NPC> factory(std::istream &is)
     }
     else
         std::cerr << "error: unexpected NPC:" << type << std::endl;
-
+    //заносим подписку в текстовый и файловый observer
     if (result){
         result->subscribe(TextVisitor::get());
         result->subscribe(F_Visitor::get());
@@ -84,7 +103,7 @@ std::shared_ptr<NPC> factory(std::istream &is)
 
     return result;
 }
-
+// фабричный метод из параметров (перегрузка)
 std::shared_ptr<NPC> factory(NpcType type, int x, int y)
 {
     std::shared_ptr<NPC> result;
@@ -109,7 +128,7 @@ std::shared_ptr<NPC> factory(NpcType type, int x, int y)
 
     return result;
 }
-
+//сохранение в файл
 void save(const set_t &array, const std::string &filename)
 {
     std::ofstream fs(filename);
@@ -119,7 +138,7 @@ void save(const set_t &array, const std::string &filename)
     fs.flush();
     fs.close();
 }
-
+//выгрузка из файла
 set_t load(const std::string &filename)
 {
     set_t result;
